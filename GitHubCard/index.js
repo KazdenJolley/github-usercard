@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
@@ -16,7 +18,6 @@
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
-
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
     follow this link in your browser https://api.github.com/users/<Your github name>/followers,
@@ -28,7 +29,7 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['KazdenJolley', 'Bossman8', 'tetondan', 'dustinmyers', 'justsml', 'luishrd'];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +50,61 @@ const followersArray = [];
       </div>
     </div>
 */
+function createCard (obj) {
+  const card = document.createElement('div');
+  const img = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const name = document.createElement('h3');
+  const userName = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const profileLink = document.createElement('a');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+
+  card.appendChild(img);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+  card.classList = 'card';
+  cardInfo.classList = 'card-info';
+  name.classList = 'name';
+  userName.classList = 'username';
+  img.setAttribute('src', `${obj.avatar_url}`);
+  profileLink.setAttribute('href', `${obj.html_url}`);
+
+  name.textContent = obj.name;
+  userName.textContent = obj.login;
+  location.textContent = `Location: ${obj.location}`;
+  profile.textContent = `Profile \n ${profileLink}`;
+  profileLink.textContent = obj.html_url;
+  followers.textContent = `Followers: ${obj.followers}`;
+  following.textContent = `Following: ${obj.following}`;
+  bio.textContent = `Bio: ${obj.bio}`;
+
+  return card;
+}
+
+const cards = document.querySelector('.cards');
+followersArray.forEach((gitHubUser) => {
+  axios
+    .get(`https://api.github.com/users/${gitHubUser}`)
+    .then(res => {
+      const kazObj = res.data;
+      const kazCard = createCard(kazObj);
+      cards.appendChild(kazCard);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+})
 
 /*
   List of LS Instructors Github username's:
